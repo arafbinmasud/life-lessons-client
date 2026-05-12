@@ -1,6 +1,10 @@
 import { Link, NavLink } from "react-router";
 import Logo from "./Logo";
+import useAuth from "../hooks/useAuth";
+import DropDown from "./DropDown";
 const Navbar = () => {
+  const { user, loading } = useAuth();
+
   const links = (
     <>
       <li>
@@ -59,20 +63,26 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-end">
-          <div className="flex gap-3">
-            <Link
-              to="/authentication/login"
-              className="btn btn-primary text-black "
-            >
-              Login
-            </Link>
-            <Link
-              to="/authentication/register"
-              className="btn btn-primary text-black"
-            >
-              Register
-            </Link>
-          </div>
+          {loading ? (
+            <span className="loading loading-spinner loading-lg"></span>
+          ) : user ? (
+            <DropDown/>
+          ) : (
+            <div className="flex gap-3">
+              <Link
+                to="/authentication/login"
+                className="btn btn-primary text-black "
+              >
+                Login
+              </Link>
+              <Link
+                to="/authentication/register"
+                className="btn btn-primary text-black"
+              >
+                Register
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
     </header>
