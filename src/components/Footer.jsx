@@ -6,7 +6,7 @@ import { FaXTwitter } from "react-icons/fa6";
 const Footer = () => {
   return (
     <footer className="bg-base-300 ">
-      <div className="footer sm:footer-horizontal  text-base-content p-10 max-w-350 mx-auto">
+      <div className="footer sm:footer-horizontal  text-base-content px-3 py-10 max-w-350 mx-auto">
         <div>
           <Logo />
           <p className="text-3xl text-secondary">Digital Life Lessons</p>

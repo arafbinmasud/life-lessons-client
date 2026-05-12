@@ -5,13 +5,19 @@ import Footer from "../components/Footer";
 
 const AuthLayout = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+
       <Navbar />
+
+      <main className="flex-1">
       <Container>
         <Outlet />
       </Container>
+      </main>
+
       <Footer/>
-    </>
+      
+    </div>
   );
 };
 

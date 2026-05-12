@@ -1,16 +1,33 @@
 // import { useState } from "react";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
+import { auth } from "../firebase/firebase.config";
 import { AuthContext } from "./AuthContext"
 
 const AuthProvider = ({children}) => {
     // const [user, setUser] = useState(null);
     // const [loading, setLoading] = useState(true);
 
+    const googleProvider = new GoogleAuthProvider;
+
+    const registerUser = (email, password) => {
+        return createUserWithEmailAndPassword(auth, email, password)
+    }
+
+    const updateUser = (updateInfo) => {
+        return updateProfile(auth.currentUser, updateInfo) ;
+    }
+
+    const googleSignIn = () => {
+        return signInWithPopup(auth, googleProvider)
+    }
+
 
     const authInfo = {
-        name: 'araf',
-        age: 20
+        registerUser,
+        updateUser,
+        googleSignIn,
     }
-    console.log(authInfo);
+    
     
     return <AuthContext value={authInfo}>{children}</AuthContext>
 }

@@ -21,7 +21,7 @@ const Navbar = () => {
     </>
   );
   return (
-    <header className="shadow-sm">
+    <header className="shadow-sm sticky top-0 z-10">
       <nav className="navbar bg-base-100 max-w-350 mx-auto">
         <div className="navbar-start">
           <div className="dropdown">
