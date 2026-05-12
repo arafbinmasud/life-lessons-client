@@ -66,7 +66,7 @@ const Register = () => {
                   {...register("email", { required: true })}
                   type="email"
                   className="input"
-                  placeholder="Email"
+                  placeholder="Your Email"
                 />
                 {errors.email?.type === "required" && (
                   <p className="text-red-500">Email is Required</p>
