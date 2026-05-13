@@ -39,7 +39,7 @@ const DropDown = () => {
           <Link className="py-2">Profile</Link>
         </li>
         <li>
-          <Link className="py-2">Dashboard</Link>
+          <Link to="/dashboard" className="py-2">Dashboard</Link>
         </li>
         <li>
           <button onClick={handleLogout} className="text-red-500 py-2">

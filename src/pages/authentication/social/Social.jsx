@@ -1,14 +1,19 @@
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router";
 
 const Social = () => {
   const { googleSignIn } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  
   const handleGoogleLogin = () => {
-    console.log("clicked");
+   
     googleSignIn()
       .then((res) => {
         console.log(res.user);
-
+        navigate(location.state || "/");
         toast.success(
           `Hi ${res.user.displayName} , Welcome to Digital Life Lessons`,
         );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import Social from "../social/Social";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -9,19 +9,21 @@ import { toast } from "react-toastify";
 const Login = () => {
   const { loginUser } = useAuth();
   const [showPass, setShowPass] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+
   const handleLogin = (data) => {
     console.log("clicked", data);
     loginUser(data.email, data.password)
       .then((res) => {
         toast.success(`Login Successful! Welcome Back ${res.user.displayName}`);
-        navigate("/")
+        navigate(location.state || "/");
       })
       .catch((err) => {
         toast.error(err.message);

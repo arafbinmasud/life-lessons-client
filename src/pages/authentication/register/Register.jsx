@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router";
 import Social from "../social/Social";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
+import useAxios from "../../../hooks/useAxios";
 
 const Register = () => {
   const { registerUser, updateUser } = useAuth();
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
+  const axiosInstance = useAxios();
   const {
     register,
     handleSubmit,
@@ -18,16 +20,33 @@ const Register = () => {
 
   const handleRegister = (data) => {
     console.log("clicked", data);
+
+    // to save in db
+    const user = {
+      displayName: data.name,
+      email: data.email,
+      photoURL: data.photo,
+      role: "user",
+      isPremiumUser: false,
+    };
+
     const updateInfo = {
       displayName: data.name,
-      photoURL: data.photo
-    }
+      photoURL: data.photo,
+    };
     registerUser(data.email, data.password)
       .then((res) => {
         console.log(res.user);
-        updateUser(updateInfo)
+        updateUser(updateInfo);
         navigate("/");
-        toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`)
+        axiosInstance
+          .post("/users", user)
+          .then(() => {
+            toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         toast.error(err.message);
