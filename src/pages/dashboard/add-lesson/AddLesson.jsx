@@ -1,26 +1,67 @@
 import { useForm } from "react-hook-form";
 import useRole from "../../../hooks/useRole";
+import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useState } from "react";
+import successAnimation from "../../../assets/Success.json";
+import Lottie from "lottie-react";
 
 const AddLesson = () => {
   const { isPremiumUser, loading } = useRole();
-  
-  console.log("add theke", isPremiumUser, loading);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
-  if(loading) {
-    <span className="loading loading-spinner loading-lg"></span>
+  if (loading) {
+    return <span className="loading loading-spinner loading-lg"></span>;
   }
 
   const handlePublishLesson = (data) => {
-    console.log(data);
+    data.authorName = user.displayName;
+    data.authorEmail = user.email;
+    data.isFeatured = false;
+
+    axiosSecure
+      .post("/lessons", data)
+      .then((res) => {
+        if (res.data.insertedId) {
+          setShowSuccess(true);
+          reset();
+
+          setTimeout(() => {
+            setShowSuccess(false);
+          }, 4000);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   return (
-    <div>
+    <div className="relative">
+      {showSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white p-8 rounded-2xl flex flex-col items-center">
+            <Lottie.default
+              animationData={successAnimation}
+              loop={false}
+              className="w-64 h-64"
+            />
+            <h2 className="text-2xl font-bold text-green-600 mt-4">
+              Lesson Published!
+            </h2>
+          </div>
+        </div>
+      )}
+
       <h1 className="text-4xl font-bold text-center mb-5">
         Share A Life Lesson
       </h1>
@@ -82,13 +123,25 @@ const AddLesson = () => {
                 {/* access level */}
                 <div>
                   <label className="label font-bold mb-1">Access Level</label>
-                  <select {...register("category")} className="select w-full">
-                    <option value="Personal Growth">Personal Growth</option>
-                    <option value="Career">Career</option>
-                    <option value="Relationships">Relationships</option>
-                    <option value="Mindset">Mindset</option>
-                    <option value="Mistakes Learned">Mistakes Learned</option>
-                  </select>
+
+                  <div
+                    className={`${!isPremiumUser ? "tooltip w-full" : "w-full"}`}
+                    data-tip={
+                      !isPremiumUser
+                        ? "Upgrade to Premium to create paid lessons"
+                        : ""
+                    }
+                  >
+                    <select
+                      {...register("accessLevel")}
+                      disabled={!isPremiumUser}
+                      defaultValue="Free"
+                      className={`select w-full ${!isPremiumUser ? "bg-gray-200" : ""}`}
+                    >
+                      <option value="Free">Free</option>
+                      <option value="Premium">Premium</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* privacy */}
