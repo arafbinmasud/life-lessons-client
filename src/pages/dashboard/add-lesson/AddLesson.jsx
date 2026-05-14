@@ -1,11 +1,20 @@
 import { useForm } from "react-hook-form";
+import useRole from "../../../hooks/useRole";
 
 const AddLesson = () => {
+  const { isPremiumUser, loading } = useRole();
+  
+  console.log("add theke", isPremiumUser, loading);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  if(loading) {
+    <span className="loading loading-spinner loading-lg"></span>
+  }
 
   const handlePublishLesson = (data) => {
     console.log(data);
@@ -31,7 +40,7 @@ const AddLesson = () => {
                 <p className=" text-red-500">Title is required</p>
               )}
 
-              {/* catergory and emotional tone  */}
+              {/* category and emotional tone  */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* category  */}
                 <div>
@@ -93,7 +102,7 @@ const AddLesson = () => {
               </div>
 
               {/* story  */}
-              <label className="label font-semibold">Story / Insight</label>
+              <label className="label font-bold">Story / Insight</label>
               <textarea
                 {...register("description", { required: true })}
                 type="text"

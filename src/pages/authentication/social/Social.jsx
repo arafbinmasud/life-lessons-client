@@ -1,22 +1,43 @@
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
+import useAxios from "../../../hooks/useAxios";
 
 const Social = () => {
   const { googleSignIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  
-  
+  const axios = useAxios();
+
   const handleGoogleLogin = () => {
-   
     googleSignIn()
       .then((res) => {
-        console.log(res.user);
+        const token = res.user.accessToken;
+        const user = {
+          displayName: res.user.displayName,
+          email: res.user.email,
+          photoURL: res.user.photoURL,
+          role: "user",
+          isPremiumUser: false,
+        };
+        axios
+          .post("/users", user, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((result) => {
+            if (
+              result.data.insertedId ||
+              result.data.message === "User Exists"
+            ) {
+              toast.success(
+                `Hi ${res.user.displayName} , Welcome to Digital Life Lessons`,
+              );
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         navigate(location.state || "/");
-        toast.success(
-          `Hi ${res.user.displayName} , Welcome to Digital Life Lessons`,
-        );
       })
       .catch((err) => {
         toast.error(err.message);

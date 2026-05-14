@@ -11,7 +11,7 @@ const Register = () => {
   const { registerUser, updateUser } = useAuth();
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
-  const axiosInstance = useAxios();
+  const axios = useAxios();
   const {
     register,
     handleSubmit,
@@ -37,12 +37,17 @@ const Register = () => {
     registerUser(data.email, data.password)
       .then((res) => {
         console.log(res.user);
+        const token = res.user.accessToken;
         updateUser(updateInfo);
         navigate("/");
-        axiosInstance
-          .post("/users", user)
-          .then(() => {
-            toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`);
+        axios
+          .post("/users", user, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            if (res.data.insertedId || res.data.message === "User Exists") {
+              toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`);
+            }
           })
           .catch((err) => {
             console.log(err);
