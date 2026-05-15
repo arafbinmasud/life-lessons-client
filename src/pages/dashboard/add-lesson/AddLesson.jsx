@@ -5,6 +5,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useState } from "react";
 import successAnimation from "../../../assets/Success.json";
 import Lottie from "lottie-react";
+import Loader from "../../../components/Loader";
 
 const AddLesson = () => {
   const { isPremiumUser, loading } = useRole();
@@ -20,12 +21,10 @@ const AddLesson = () => {
   } = useForm();
 
   if (loading) {
-    return <span className="loading loading-spinner loading-lg"></span>;
+    return <Loader />;
   }
 
   const handlePublishLesson = (data) => {
-    data.authorName = user.displayName;
-    data.authorEmail = user.email;
     data.isFeatured = false;
 
     axiosSecure
@@ -104,6 +103,32 @@ const AddLesson = () => {
                     <option value="Realization">Realization</option>
                     <option value="Gratitude">Gratitude</option>
                   </select>
+                </div>
+              </div>
+
+              {/* author name n email   */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* name  */}
+                <div>
+                  <label className="label font-bold mb-1">Author Name</label>
+                  <input
+                    {...register("authorName")}
+                    type="text"
+                    readOnly
+                    defaultValue={user?.displayName}
+                    className="input w-full"
+                  />
+                </div>
+                {/*email  */}
+                <div>
+                  <label className="label font-bold mb-1">Author Email</label>
+                  <input
+                    {...register("authorEmail")}
+                    type="text"
+                    readOnly
+                    defaultValue={user?.email}
+                    className="input w-full"
+                  />
                 </div>
               </div>
 

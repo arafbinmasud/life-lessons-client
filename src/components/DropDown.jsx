@@ -2,13 +2,14 @@ import useAuth from "../hooks/useAuth";
 import userImg from "../assets/user.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
+import Loader from "./Loader";
 
 const DropDown = () => {
   const { loading, user, logoutUser } = useAuth();
   console.log(user);
 
   if (loading) {
-    return <span className="loading loading-spinner loading-md"></span>;
+    return <Loader/>;
   }
 
   const handleLogout = () => {

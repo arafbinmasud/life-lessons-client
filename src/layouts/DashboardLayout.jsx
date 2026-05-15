@@ -1,7 +1,8 @@
 import { FiPlusCircle } from "react-icons/fi";
 import {NavLink, Outlet } from "react-router";
 import Container from "../components/Container";
-import { MdOutlineDashboard } from "react-icons/md";
+import { MdOutlineDashboard} from "react-icons/md";
+import { HiOutlineBookOpen } from "react-icons/hi";
 
 const DashboardLayout = () => {
   return (
@@ -101,6 +102,18 @@ const DashboardLayout = () => {
                 <span className="is-drawer-close:hidden">Add Lesson</span>
               </NavLink>
             </li>
+            {/* my lessons  */}
+            <li>
+              <NavLink
+                to="/dashboard/my-lessons"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="My Lessons"
+              >
+                <HiOutlineBookOpen />
+                <span className="is-drawer-close:hidden">My Lessons</span>
+              </NavLink>
+            </li>
+            
           </ul>
         </div>
       </div>

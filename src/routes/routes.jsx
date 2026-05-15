@@ -8,6 +8,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardOverview from "../pages/dashboard/dashboard-overview/DashboardOverview";
 import AddLesson from "../pages/dashboard/add-lesson/AddLesson";
 import PrivateRoute from "./PrivateRoute";
+import MyLessons from "../pages/dashboard/my-lessons/MyLessons";
 
 
 const router = createBrowserRouter([
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
       {
         path: "add-lesson",
         element: <PrivateRoute><AddLesson/></PrivateRoute>
-      }
+      },
+      {
+        path: "my-lessons",
+        element: <PrivateRoute><MyLessons/></PrivateRoute>
+      },
     ]
   }
 ]);
