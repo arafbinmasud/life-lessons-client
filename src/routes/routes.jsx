@@ -12,6 +12,8 @@ import MyLessons from "../pages/dashboard/my-lessons/MyLessons";
 import UpgradePlan from "../pages/upgrade-plan/UpgradePlan";
 import PaymentSuccess from "../pages/upgrade-plan/PaymentSuccess";
 import PaymentCancel from "../pages/upgrade-plan/PaymentCancel";
+import LessonDetails from "../pages/lesson-details/LessonDetails";
+import AuthorLessons from "../pages/author-lessons/AuthorLessons";
 
 
 const router = createBrowserRouter([
@@ -35,6 +37,14 @@ const router = createBrowserRouter([
         path: "/payment-cancel",
         Component: PaymentCancel
       },
+      {
+        path: "/lesson-details/:id",
+        element: <PrivateRoute><LessonDetails/></PrivateRoute>
+      },
+      {
+        path: "/author-lessons/:authorId",
+        element: <PrivateRoute><AuthorLessons/></PrivateRoute>
+      },
     ],
   },
   {
@@ -53,7 +63,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    Component: DashboardLayout,
+    element: <PrivateRoute><DashboardLayout/></PrivateRoute>,
     children: [
       {index: true,
         Component:DashboardOverview

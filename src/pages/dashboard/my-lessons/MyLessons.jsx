@@ -5,12 +5,12 @@ import useRole from "../../../hooks/useRole";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import {
+  FaBookmark,
   FaEdit,
   FaEye,
   FaGlobe,
   FaHeart,
   FaLock,
-  FaStar,
   FaTrash,
 } from "react-icons/fa";
 import Loader from "../../../components/Loader";
@@ -138,11 +138,11 @@ const MyLessons = () => {
                   <div className="flex flex-col gap-1 text-xs">
                     <span className="flex items-center gap-1">
                       <FaHeart className="text-red-500" />{" "}
-                      {lesson.reactionsCount || 0}
+                      {lesson.likes?.length || 0}
                     </span>
                     <span className="flex items-center gap-1">
-                      <FaStar className="text-yellow-500" />{" "}
-                      {lesson.savesCount || 0}
+                      <FaBookmark className="text-yellow-500" />{" "}
+                      {lesson.favorites?.length || 0}
                     </span>
                   </div>
                 </td>
@@ -151,7 +151,7 @@ const MyLessons = () => {
                     {lesson.privacy === "Public" ? (
                       <FaGlobe className="text-secondary" />
                     ) : (
-                      <FaLock />
+                      <FaLock className="text-secondary" />
                     )}{" "}
                     {lesson.privacy}
                   </span>
@@ -174,7 +174,7 @@ const MyLessons = () => {
                 <td>
                   <div className="flex gap-2">
                     <Link
-                      to=""
+                      to={`/lesson-details/${lesson._id}`}
                       className="btn btn-square btn-ghost btn-sm tooltip"
                       data-tip="Details"
                     >

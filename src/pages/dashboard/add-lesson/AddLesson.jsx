@@ -12,6 +12,7 @@ const AddLesson = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+console.log(user);
 
   const {
     register,
@@ -26,6 +27,10 @@ const AddLesson = () => {
 
   const handlePublishLesson = (data) => {
     data.isFeatured = false;
+    data.likes = [];
+    data.favorites = [];
+    data.authorPhoto = user?.photoURL
+    data.authorId = user?.uid
 
     axiosSecure
       .post("/lessons", data)
