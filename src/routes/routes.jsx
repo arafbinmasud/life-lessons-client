@@ -15,6 +15,7 @@ import PaymentCancel from "../pages/upgrade-plan/PaymentCancel";
 import LessonDetails from "../pages/lesson-details/LessonDetails";
 import AuthorLessons from "../pages/author-lessons/AuthorLessons";
 import PublicLessons from "../pages/public-lessons/PublicLessons";
+import MyFavorites from "../pages/dashboard/my-favorites/MyFavorites";
 
 
 const router = createBrowserRouter([
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: "my-lessons",
         element: <PrivateRoute><MyLessons/></PrivateRoute>
+      },
+      {
+        path: "my-favorites",
+        element: <PrivateRoute><MyFavorites/></PrivateRoute>
       },
     ]
   }
