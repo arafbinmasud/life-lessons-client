@@ -1,9 +1,4 @@
-import {
-  FaHeart,
-  FaBookmark,
-  FaFlag,
-  FaArrowCircleRight,
-} from "react-icons/fa";
+import { FaHeart, FaBookmark, FaFlag } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router";
 import {
   FacebookShareButton,
@@ -17,6 +12,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import Swal from "sweetalert2";
+import Card from "../../components/Card";
 
 const LessonDetails = () => {
   const { id } = useParams();
@@ -150,7 +146,7 @@ const LessonDetails = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       {/* main grid  */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* main side left- full details n cmnts like, save, report , share etc*/}
@@ -331,43 +327,13 @@ const LessonDetails = () => {
 
       {/* similar lessons div outside of grid box*/}
       {isSimilarLoading && <Loader />}
-      <div className="mt-20">
-        <h2 className="text-2xl font-bold mb-8">
-          Similar Lessons You Might Like
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {similarLessons.map((item) => (
-            <div key={item._id} className="card bg-base-100 shadow-xl">
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="h-48 w-full object-cover rounded-t-2xl"
-                />
-              )}
-              <div className="card-body">
-                <div className=" flex gap-2 flex-wrap">
-                  <span className="badge badge-secondary badge-outline">
-                    {item.category}
-                  </span>
-                  <span className="badge badge-secondary badge-outline">
-                    {item.tone}
-                  </span>
-                </div>
-                <h3 className="card-title mt-2">{item.title}</h3>
-                <p className="text-accent text-sm line-clamp-3">
-                  {item.description}
-                </p>
-                <div className="card-actions justify-end mt-4">
-                  <Link
-                    to={`/lesson-details/${item._id}`}
-                    className="btn btn-sm btn-secondary"
-                  >
-                    Read Lesson <FaArrowCircleRight />
-                  </Link>
-                </div>
-              </div>
-            </div>
+      <div className="mt-32">
+        <h3 className="text-4xl font-semibold mb-8">
+          Similar lessons that you might like
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+          {similarLessons.map((lesson) => (
+            <Card key={lesson._id} lesson={lesson} />
           ))}
         </div>
       </div>

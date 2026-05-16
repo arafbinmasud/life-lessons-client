@@ -14,6 +14,7 @@ import PaymentSuccess from "../pages/upgrade-plan/PaymentSuccess";
 import PaymentCancel from "../pages/upgrade-plan/PaymentCancel";
 import LessonDetails from "../pages/lesson-details/LessonDetails";
 import AuthorLessons from "../pages/author-lessons/AuthorLessons";
+import PublicLessons from "../pages/public-lessons/PublicLessons";
 
 
 const router = createBrowserRouter([
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "/public-lessons",
+        Component: PublicLessons
       },
       {
         path: "/upgrade-plan",
