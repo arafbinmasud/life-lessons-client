@@ -37,7 +37,7 @@ const DropDown = () => {
           <p className="font-bold text-sm">{user?.displayName}</p>
         </div>
         <li>
-          <Link className="py-2">Profile</Link>
+          <Link to="/dashboard/profile" className="py-2">Profile</Link>
         </li>
         <li>
           <Link to="/dashboard" className="py-2">Dashboard</Link>

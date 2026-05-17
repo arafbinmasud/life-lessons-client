@@ -17,6 +17,7 @@ import AuthorLessons from "../pages/author-lessons/AuthorLessons";
 import PublicLessons from "../pages/public-lessons/PublicLessons";
 import MyFavorites from "../pages/dashboard/my-favorites/MyFavorites";
 import NotFound from "../pages/not-found/NotFound";
+import Profile from "../pages/dashboard/profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -109,6 +110,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MyFavorites />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
           </PrivateRoute>
         ),
       },

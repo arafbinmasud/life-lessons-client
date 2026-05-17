@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router";
 import Container from "../components/Container";
 import { MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineBookOpen } from "react-icons/hi";
-import { FaBookmark } from "react-icons/fa";
+import { FaBookmark, FaUser } from "react-icons/fa";
 
 const DashboardLayout = () => {
   return (
@@ -123,6 +123,17 @@ const DashboardLayout = () => {
               >
                 <FaBookmark />
                 <span className="is-drawer-close:hidden">My Favorites</span>
+              </NavLink>
+            </li>
+            {/* my profile  */}
+            <li>
+              <NavLink
+                to="/dashboard/profile"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Profile"
+              >
+                <FaUser />
+                <span className="is-drawer-close:hidden">Profile</span>
               </NavLink>
             </li>
           </ul>
