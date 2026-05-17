@@ -16,7 +16,7 @@ import LessonDetails from "../pages/lesson-details/LessonDetails";
 import AuthorLessons from "../pages/author-lessons/AuthorLessons";
 import PublicLessons from "../pages/public-lessons/PublicLessons";
 import MyFavorites from "../pages/dashboard/my-favorites/MyFavorites";
-
+import NotFound from "../pages/not-found/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -29,27 +29,39 @@ const router = createBrowserRouter([
       },
       {
         path: "/public-lessons",
-        Component: PublicLessons
+        Component: PublicLessons,
       },
       {
         path: "/upgrade-plan",
-        element: <PrivateRoute><UpgradePlan/></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <UpgradePlan />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/payment-success",
-        Component: PaymentSuccess
+        Component: PaymentSuccess,
       },
       {
         path: "/payment-cancel",
-        Component: PaymentCancel
+        Component: PaymentCancel,
       },
       {
         path: "/lesson-details/:id",
-        element: <PrivateRoute><LessonDetails/></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <LessonDetails />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/author-lessons/:authorId",
-        element: <PrivateRoute><AuthorLessons/></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <AuthorLessons />
+          </PrivateRoute>
+        ),
       },
     ],
   },
@@ -69,25 +81,43 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <PrivateRoute><DashboardLayout/></PrivateRoute>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
-      {index: true,
-        Component:DashboardOverview
-      },
+      { index: true, Component: DashboardOverview },
       {
         path: "add-lesson",
-        element: <PrivateRoute><AddLesson/></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <AddLesson />
+          </PrivateRoute>
+        ),
       },
       {
         path: "my-lessons",
-        element: <PrivateRoute><MyLessons/></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <MyLessons />
+          </PrivateRoute>
+        ),
       },
       {
         path: "my-favorites",
-        element: <PrivateRoute><MyFavorites/></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <MyFavorites />
+          </PrivateRoute>
+        ),
       },
-    ]
-  }
+    ],
+  },
+  {
+    path: "*",
+    Component: NotFound,
+  },
 ]);
 
 export default router;
