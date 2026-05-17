@@ -25,6 +25,7 @@
     "react-toastify": "^11.1.0",
     "recharts": "^3.8.1",
     "sweetalert2": "^11.26.24",
+    "swiper": "^12.1.4",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
