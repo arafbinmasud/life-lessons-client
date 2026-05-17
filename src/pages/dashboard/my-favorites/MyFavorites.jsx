@@ -5,6 +5,8 @@ import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
 import { Link } from "react-router";
 import { FaTrashAlt, FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const MyFavorites = () => {
   const axiosSecure = useAxiosSecure();
@@ -13,7 +15,11 @@ const MyFavorites = () => {
   const [category, setCategory] = useState("");
   const [tone, setTone] = useState("");
 
-  const { data: favorites = [], isLoading } = useQuery({
+  const {
+    data: favorites = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["my-favorites", user?.email, category, tone],
     enabled: !!user?.email,
     queryFn: async () => {
@@ -23,6 +29,36 @@ const MyFavorites = () => {
       return res.data;
     },
   });
+
+  const handleRemove = (lessonId) => {
+    console.log(lessonId);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to remove this lesson from favorites?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure
+          .put("/my-favorites/remove", {
+            lessonId,
+            email: user?.email,
+          })
+          .then((res) => {
+            if (res.data.modifiedCount) {
+              refetch();
+              toast.success("Removed Successfully");
+            }
+          })
+          .catch((err) => {
+            toast.error(err);
+          });
+      }
+    });
+  };
 
   if (isLoading) return <Loader />;
 
@@ -106,6 +142,7 @@ const MyFavorites = () => {
                     </Link>
 
                     <button
+                      onClick={() => handleRemove(lesson._id)}
                       className="btn btn-ghost text-error tooltip"
                       data-tip="Remove"
                     >
