@@ -19,6 +19,7 @@ import MyFavorites from "../pages/dashboard/my-favorites/MyFavorites";
 import NotFound from "../pages/not-found/NotFound";
 import Profile from "../pages/dashboard/profile/Profile";
 import AdminOverview from "../pages/dashboard/admin/admin-overview/AdminOverview";
+import ManageUsers from "../pages/dashboard/admin/manage-users/ManageUsers";
 
 const router = createBrowserRouter([
   {
@@ -127,6 +128,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <AdminOverview />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "admin/manage-users",
+        element: (
+          <PrivateRoute>
+            <ManageUsers />
           </PrivateRoute>
         ),
       },

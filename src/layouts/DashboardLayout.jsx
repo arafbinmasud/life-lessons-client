@@ -6,6 +6,7 @@ import { HiOutlineBookOpen } from "react-icons/hi";
 import { FaBookmark, FaUser } from "react-icons/fa";
 import useRole from "../hooks/useRole";
 import Loader from "../components/Loader";
+import { FaUsersGear } from "react-icons/fa6";
 
 const DashboardLayout = () => {
   const { role, loading } = useRole();
@@ -160,6 +161,19 @@ const DashboardLayout = () => {
                   >
                     <MdOutlineDashboard />
                     <span className="is-drawer-close:hidden">Overview</span>
+                  </NavLink>
+                </li>
+
+                {/*manage users page  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/admin/manage-users"
+                    end
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Manage Users"
+                  >
+                    <FaUsersGear />
+                    <span className="is-drawer-close:hidden">Manage Users</span>
                   </NavLink>
                 </li>
               </>
