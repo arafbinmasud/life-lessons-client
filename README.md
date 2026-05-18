@@ -1,16 +1,31 @@
-# React + Vite
+[file-tag: code-generated-file-1-1779120681972117234]
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+```markdown
+# 🌟 Digital Life Lesson — Client Side
 
-Currently, two official plugins are available:
+An elegant, minimalist full-stack platform designed for sharing and discovering profound life lessons and personal philosophies. It brings people together through inspiring thoughts, professional content, and robust platform moderation.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🔗 **Live Site URL:** [https://digital-life-lesson-176c8.web.app/](https://digital-life-lesson-176c8.web.app/)
 
-## React Compiler
+## ✨ Core Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Premium Membership & Stripe Integration:** Users can instantly upgrade to a "Premium ⭐" account using a secure payment gateway, unlocking advanced platform badges and exclusive recognition.
 
-## Expanding the ESLint configuration
+- **Robust React Hook Form with Real-Time Profile Sync:** Seamless client-side profile customizer allowing users to dynamically modify their Display Name and Avatar Photo URLs with proactive `async/await` Firebase authentication state flushing.
+- **Optimized Queries with TanStack Query (React Query):** Implements dynamic query keys to manage cache states across public, private, and flagged routes, providing automated background refetching without disruptive page refreshes.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack Used
+
+- **Core Framework:** React.js (Vite)
+- **State & Data Fetching:** TanStack Query (React Query)
+- **Form Management:** React Hook Form
+- **Styling & UI:** Tailwind CSS + DaisyUI
+- **Icons & Alerts:** React Icons, SweetAlert2
+- **Data Visualization:** Recharts
+- **Routing:** React Router DOM
+- **Authentication & Hosting:** Firebase Auth & Firebase Hosting
+
+---
+```
