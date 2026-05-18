@@ -26,7 +26,7 @@ const Navbar = () => {
   );
   return (
     <header className="shadow-sm sticky top-0 z-10">
-      <nav className="navbar bg-base-100 max-w-350 mx-auto">
+      <nav className="navbar bg-base-100 max-w-350 mx-auto h-16">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -62,25 +62,19 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
 
-        <div className="navbar-end">
+        <div className="navbar-end flex items-center h-16">
           {loading ? (
-            <span className="loading loading-spinner loading-lg"></span>
+            <div className="w-12 h-12 flex items-center justify-center">
+              <span className="loading loading-spinner"></span>
+            </div>
           ) : user ? (
-            <DropDown/>
+            <div className="h-12 flex items-center">
+              <DropDown />
+            </div>
           ) : (
-            <div className="flex gap-3">
-              <Link
-                to="/authentication/login"
-                className="btn btn-primary text-black "
-              >
-                Login
-              </Link>
-              <Link
-                to="/authentication/register"
-                className="btn btn-primary text-black"
-              >
-                Register
-              </Link>
+            <div className="flex gap-3 h-12 items-center">
+              <Link className="btn btn-primary h-12 min-h-0">Login</Link>
+              <Link className="btn btn-primary h-12 min-h-0">Register</Link>
             </div>
           )}
         </div>

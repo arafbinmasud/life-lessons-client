@@ -2,7 +2,6 @@ import useAuth from "../hooks/useAuth";
 import userImg from "../assets/user.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
-import Loader from "./Loader";
 import useRole from "../hooks/useRole";
 
 const DropDown = () => {
@@ -10,7 +9,7 @@ const DropDown = () => {
   const { role, loading: roleLoading } = useRole();
 
   if (loading || roleLoading) {
-    return <Loader />;
+    return <span className="loading loading-spinner loading-lg"></span>;
   }
 
   const handleLogout = () => {
