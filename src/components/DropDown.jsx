@@ -60,6 +60,11 @@ const DropDown = () => {
                 Dashboard
               </Link>
             </li>
+            <li>
+              <Link to="/dashboard/admin/profile" className="py-2">
+                Profile
+              </Link>
+            </li>
           </>
         )}
         <li>

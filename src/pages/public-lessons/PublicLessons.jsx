@@ -62,6 +62,7 @@ const PublicLessons = () => {
           <option value="Mindset">Mindset</option>
           <option value="Mistakes Learned">Mistakes Learned</option>
         </select>
+        
         <select
           value={tone}
           className="select select-bordered w-full"

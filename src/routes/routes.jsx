@@ -20,6 +20,8 @@ import NotFound from "../pages/not-found/NotFound";
 import Profile from "../pages/dashboard/profile/Profile";
 import AdminOverview from "../pages/dashboard/admin/admin-overview/AdminOverview";
 import ManageUsers from "../pages/dashboard/admin/manage-users/ManageUsers";
+import ManageLessons from "../pages/dashboard/admin/manage-lessons/ManageLessons";
+import AdminProfile from "../pages/dashboard/admin/admin-profile/AdminProfile";
 
 const router = createBrowserRouter([
   {
@@ -136,6 +138,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ManageUsers />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "admin/manage-lessons",
+        element: (
+          <PrivateRoute>
+            <ManageLessons />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "admin/profile",
+        element: (
+          <PrivateRoute>
+            <AdminProfile />
           </PrivateRoute>
         ),
       },

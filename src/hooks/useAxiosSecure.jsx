@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useEffect } from "react";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://life-lesson-server-kohl.vercel.app",
 });
 
 const useAxiosSecure = () => {

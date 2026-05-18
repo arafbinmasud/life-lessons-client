@@ -1,33 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import useAuth from "../../../hooks/useAuth";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import Loader from "../../../components/Loader";
-import Swal from "sweetalert2";
-import { FaBookmark, FaEnvelope, FaFolder, FaUserEdit } from "react-icons/fa";
-import Card from "../../../components/Card";
-import useRole from "../../../hooks/useRole";
+import useAuth from "../../../../hooks/useAuth";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import useRole from "../../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import Swal from "sweetalert2";
+import Loader from "../../../../components/Loader";
+import { FaEnvelope, FaUserEdit, FaUserShield } from "react-icons/fa";
 
-const Profile = () => {
+const AdminProfile = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading, updateUser } = useAuth();
-  const { isPremiumUser } = useRole();
+  const { role, loading: roleLoading } = useRole();
 
-  const {
-    data: profileData = {},
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["user-profile-info", user?.email],
-    enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/user-profile-info?email=${user?.email}`,
-      );
-      return res.data;
-    },
-  });
+  console.log(user);
 
   const { register, handleSubmit, reset } = useForm();
 
@@ -41,10 +26,12 @@ const Profile = () => {
   }, [user, reset]);
 
   const handleUpdateProfile = (data) => {
-    updateUser({
+    const updateInfo = {
       displayName: data.displayName,
       photoURL: data.photoURL,
-    });
+    };
+
+    updateUser(updateInfo);
 
     axiosSecure
       .patch(`/users/update-profile?email=${user?.email}`, {
@@ -58,7 +45,7 @@ const Profile = () => {
             "Profile updated successfully. Please Reload",
             "success",
           );
-          refetch();
+
           document.getElementById("update_modal").close();
         }
       })
@@ -67,17 +54,11 @@ const Profile = () => {
       });
   };
 
-  if (isLoading || loading) return <Loader />;
-
-  const {
-    totalCreated = 0,
-    totalSaved = 0,
-    myPublicLessons = [],
-  } = profileData;
+  if (loading || roleLoading) return <Loader />;
 
   return (
     <div className="space-y-12 p-2 md:p-6">
-      <div className="border border-base-300 rounded-3xl p-6 md:p-8 shadow-sm grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+      <div className="border border-base-300 rounded-3xl p-6 md:p-8 shadow-sm grid grid-cols-1 gap-8 items-center">
         {/* left side user info */}
         <div className="flex flex-col items-center text-center space-y-4">
           <div className="avatar relative">
@@ -90,9 +71,9 @@ const Profile = () => {
                 alt="Profile"
               />
             </div>
-            {isPremiumUser && (
+            {role === "admin" && (
               <span className="absolute bottom-0 right-0 badge badge-warning font-bold shadow-sm text-xs">
-                Premium ⭐
+                Admin <FaUserShield />
               </span>
             )}
           </div>
@@ -114,60 +95,9 @@ const Profile = () => {
             <FaUserEdit /> Edit Profile
           </button>
         </div>
-
-        {/* right side stats */}
-        <div className="grid grid-cols-2 gap-4 lg:col-span-2">
-          <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-6 text-center space-y-2">
-            <div className="flex justify-center text-blue-500 text-xl">
-              <FaFolder />
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Lessons Created
-            </p>
-            <h3 className="text-3xl font-black text-blue-600">
-              {totalCreated}
-            </h3>
-          </div>
-
-          <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-6 text-center space-y-2">
-            <div className="flex justify-center text-orange-500 text-xl">
-              <FaBookmark />
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Lessons Saved
-            </p>
-            <h3 className="text-3xl font-black text-orange-600">
-              {totalSaved}
-            </h3>
-          </div>
-        </div>
       </div>
 
-      {/* all public lessons */}
-      <div className="space-y-6">
-        <div className="pb-4">
-          <h2 className="text-2xl font-bold tracking-tight">
-            My Public Contributions
-          </h2>
-          <p className="text-accent mt-2">
-            All of your life lessons shared with the world, sorted by newest
-            first.
-          </p>
-        </div>
-
-        {myPublicLessons.length === 0 ? (
-          <div className="text-center py-12 text-accent">
-            You haven't published any public lessons yet.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {myPublicLessons.map((lesson) => (
-              <Card key={lesson._id} lesson={lesson} />
-            ))}
-          </div>
-        )}
-      </div>
-
+      {/* update modal  */}
       <dialog id="update_modal" className="modal">
         <div className="modal-box w-full max-w-xl">
           <h3 className="font-bold text-xl mb-4">Update Profile</h3>
@@ -219,4 +149,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default AdminProfile;

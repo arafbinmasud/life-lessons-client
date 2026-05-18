@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://life-lesson-server-kohl.vercel.app",
 });
 
 const useAxios = () => {

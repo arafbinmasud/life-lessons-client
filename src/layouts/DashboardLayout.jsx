@@ -1,7 +1,7 @@
 import { FiPlusCircle } from "react-icons/fi";
 import { NavLink, Outlet } from "react-router";
 import Container from "../components/Container";
-import { MdOutlineDashboard } from "react-icons/md";
+import { MdEditNote, MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { FaBookmark, FaUser } from "react-icons/fa";
 import useRole from "../hooks/useRole";
@@ -174,6 +174,32 @@ const DashboardLayout = () => {
                   >
                     <FaUsersGear />
                     <span className="is-drawer-close:hidden">Manage Users</span>
+                  </NavLink>
+                </li>
+                {/*manage Lessons page  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/admin/manage-lessons"
+                    end
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Manage Lessons"
+                  >
+                    <MdEditNote />
+                    <span className="is-drawer-close:hidden">
+                      Manage Lessons
+                    </span>
+                  </NavLink>
+                </li>
+                {/*admin profile page  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/admin/profile"
+                    end
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Profile"
+                  >
+                    <FaUser />
+                    <span className="is-drawer-close:hidden">Profile</span>
                   </NavLink>
                 </li>
               </>
