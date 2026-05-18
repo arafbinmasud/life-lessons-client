@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../../components/Loader";
 import { FaUserAlt, FaUserShield } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: users = [], isLoading } = useQuery({
+  const { data: users = [], isLoading , refetch} = useQuery({
     queryKey: ["manage-users"],
     queryFn: async () => {
       const res = await axiosSecure.get("/admin/users");
@@ -14,15 +15,39 @@ const ManageUsers = () => {
     },
   });
 
-  const handlePromoteAdmin = (id) => {
-    console.log(id);
+  const handlePromoteAdmin = (user) => {
+    console.log(user);
+    Swal.fire({
+      title: `Are you sure?`,
+      text: `Do you want to promote "${user.displayName}" to Admin?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Make Admin!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure
+          .patch(`/admin/users/role/${user._id}`, { role: "admin" , isPremiumUser: true})
+          .then((res) => {
+            if (res.data.modifiedCount) {
+              refetch();
+              Swal.fire(
+                "Promoted!",
+                `${user.displayName} is now an Admin.`,
+                "success",
+              );
+            }
+          })
+          .catch((err) => console.error(err));
+      }
+    });
   };
 
   if (isLoading) return <Loader />;
 
   return (
     <div className="space-y-6 p-2 md:p-6 bg-base-100 rounded-3xl border border-base-300 shadow-xs">
-      {/* Header */}
       <div>
         <h1 className="text-4xl font-black">Manage Users</h1>
         <p className="text-accent mt-1">
@@ -31,7 +56,6 @@ const ManageUsers = () => {
         </p>
       </div>
 
-      {/* Users Table */}
       <div className="overflow-x-auto">
         {users.length === 0 ? (
           <div className="text-center py-12 text-accent">No users found.</div>
@@ -87,7 +111,7 @@ const ManageUsers = () => {
 
                   <td className="text-center">
                     <button
-                      onClick={() => handlePromoteAdmin(user._id)}
+                      onClick={() => handlePromoteAdmin(user)}
                       disabled={user.role === "admin"}
                       className="btn btn-square btn-sm tooltip"
                       data-tip="Promote to Admin"
