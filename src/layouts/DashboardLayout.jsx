@@ -4,8 +4,14 @@ import Container from "../components/Container";
 import { MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { FaBookmark, FaUser } from "react-icons/fa";
+import useRole from "../hooks/useRole";
+import Loader from "../components/Loader";
 
 const DashboardLayout = () => {
+  const { role, loading } = useRole();
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -80,62 +86,84 @@ const DashboardLayout = () => {
             </li>
 
             {/* My List items  */}
-            {/* overview page  */}
-            <li>
-              <NavLink
-                to="/dashboard"
-                end
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Overview"
-              >
-                <MdOutlineDashboard />
-                <span className="is-drawer-close:hidden">Overview</span>
-              </NavLink>
-            </li>
-            {/* add lesson  */}
-            <li>
-              <NavLink
-                to="/dashboard/add-lesson"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Add Lesson"
-              >
-                <FiPlusCircle />
-                <span className="is-drawer-close:hidden">Add Lesson</span>
-              </NavLink>
-            </li>
-            {/* my lessons  */}
-            <li>
-              <NavLink
-                to="/dashboard/my-lessons"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="My Lessons"
-              >
-                <HiOutlineBookOpen />
-                <span className="is-drawer-close:hidden">My Lessons</span>
-              </NavLink>
-            </li>
-            {/* my favorites  */}
-            <li>
-              <NavLink
-                to="/dashboard/my-favorites"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="My Favorites"
-              >
-                <FaBookmark />
-                <span className="is-drawer-close:hidden">My Favorites</span>
-              </NavLink>
-            </li>
-            {/* my profile  */}
-            <li>
-              <NavLink
-                to="/dashboard/profile"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Profile"
-              >
-                <FaUser />
-                <span className="is-drawer-close:hidden">Profile</span>
-              </NavLink>
-            </li>
+            {/* for user  */}
+            {role === "user" && (
+              <>
+                {/* overview page  */}
+                <li>
+                  <NavLink
+                    to="/dashboard"
+                    end
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Overview"
+                  >
+                    <MdOutlineDashboard />
+                    <span className="is-drawer-close:hidden">Overview</span>
+                  </NavLink>
+                </li>
+                {/* add lesson  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/add-lesson"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Add Lesson"
+                  >
+                    <FiPlusCircle />
+                    <span className="is-drawer-close:hidden">Add Lesson</span>
+                  </NavLink>
+                </li>
+                {/* my lessons  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/my-lessons"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My Lessons"
+                  >
+                    <HiOutlineBookOpen />
+                    <span className="is-drawer-close:hidden">My Lessons</span>
+                  </NavLink>
+                </li>
+                {/* my favorites  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/my-favorites"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My Favorites"
+                  >
+                    <FaBookmark />
+                    <span className="is-drawer-close:hidden">My Favorites</span>
+                  </NavLink>
+                </li>
+                {/* my profile  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/profile"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Profile"
+                  >
+                    <FaUser />
+                    <span className="is-drawer-close:hidden">Profile</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {/* for admin  */}
+            {role === "admin" && (
+              <>
+                {/*admin overview page  */}
+                <li>
+                  <NavLink
+                    to="/dashboard/admin"
+                    end
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Overview"
+                  >
+                    <MdOutlineDashboard />
+                    <span className="is-drawer-close:hidden">Overview</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

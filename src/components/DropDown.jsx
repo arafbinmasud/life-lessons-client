@@ -3,13 +3,14 @@ import userImg from "../assets/user.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
 import Loader from "./Loader";
+import useRole from "../hooks/useRole";
 
 const DropDown = () => {
   const { loading, user, logoutUser } = useAuth();
-  console.log(user);
+  const { role, loading: roleLoading } = useRole();
 
-  if (loading) {
-    return <Loader/>;
+  if (loading || roleLoading) {
+    return <Loader />;
   }
 
   const handleLogout = () => {
@@ -36,12 +37,31 @@ const DropDown = () => {
         <div className="px-4 py-2 border-b border-gray-100 mb-1">
           <p className="font-bold text-sm">{user?.displayName}</p>
         </div>
-        <li>
-          <Link to="/dashboard/profile" className="py-2">Profile</Link>
-        </li>
-        <li>
-          <Link to="/dashboard" className="py-2">Dashboard</Link>
-        </li>
+
+        {role === "user" && (
+          <>
+            <li>
+              <Link to="/dashboard/profile" className="py-2">
+                Profile
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard" className="py-2">
+                Dashboard
+              </Link>
+            </li>
+          </>
+        )}
+
+        {role === "admin" && (
+          <>
+            <li>
+              <Link to="/dashboard/admin" className="py-2">
+                Dashboard
+              </Link>
+            </li>
+          </>
+        )}
         <li>
           <button onClick={handleLogout} className="text-red-500 py-2">
             Logout

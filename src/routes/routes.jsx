@@ -18,6 +18,7 @@ import PublicLessons from "../pages/public-lessons/PublicLessons";
 import MyFavorites from "../pages/dashboard/my-favorites/MyFavorites";
 import NotFound from "../pages/not-found/NotFound";
 import Profile from "../pages/dashboard/profile/Profile";
+import AdminOverview from "../pages/dashboard/admin/admin-overview/AdminOverview";
 
 const router = createBrowserRouter([
   {
@@ -118,6 +119,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Profile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "admin",
+        element: (
+          <PrivateRoute>
+            <AdminOverview />
           </PrivateRoute>
         ),
       },
