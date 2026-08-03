@@ -16,6 +16,20 @@ An elegant, minimalist full-stack platform designed for sharing and discovering 
 
 ---
 
+## 🧪 Testing
+
+Unit tests run on [Vitest](https://vitest.dev/) with React Testing Library and a jsdom environment (Node 22.12+ required).
+
+```bash
+npm test              # run the suite once
+npm run test:watch    # watch mode
+npm run test:coverage # text + html coverage report in coverage/
+```
+
+Tests live next to the code they cover as `*.test.jsx`; shared render helpers are in `src/test/utils.jsx`.
+
+---
+
 ## 🛠️ Tech Stack Used
 
 - **Core Framework:** React.js (Vite)
