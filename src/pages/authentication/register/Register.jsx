@@ -19,8 +19,6 @@ const Register = () => {
   } = useForm();
 
   const handleRegister = (data) => {
-    console.log("clicked", data);
-
     // to save in db
     const user = {
       displayName: data.name,
@@ -36,7 +34,6 @@ const Register = () => {
     };
     registerUser(data.email, data.password)
       .then((res) => {
-        console.log(res.user);
         const token = res.user.accessToken;
         updateUser(updateInfo);
         navigate("/");

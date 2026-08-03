@@ -8,6 +8,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardOverview from "../pages/dashboard/dashboard-overview/DashboardOverview";
 import AddLesson from "../pages/dashboard/add-lesson/AddLesson";
 import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
 import MyLessons from "../pages/dashboard/my-lessons/MyLessons";
 import UpgradePlan from "../pages/upgrade-plan/UpgradePlan";
 import PaymentSuccess from "../pages/upgrade-plan/PaymentSuccess";
@@ -128,33 +129,33 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <AdminOverview />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
         path: "admin/manage-users",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <ManageUsers />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
         path: "admin/manage-lessons",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <ManageLessons />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
         path: "admin/profile",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <AdminProfile />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
     ],
