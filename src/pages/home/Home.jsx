@@ -17,10 +17,17 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import ErrorState from "../../components/ErrorState";
 
 const Home = () => {
   const axios = useAxios();
-  const { data: homeData = {}, isLoading } = useQuery({
+  const {
+    data: homeData = {},
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["home-data"],
     queryFn: async () => {
       const res = await axios.get("/home-dynamic-data");
@@ -29,6 +36,16 @@ const Home = () => {
   });
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load the homepage"
+      />
+    );
+  }
 
   const {
     featuredLessons = [],

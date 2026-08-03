@@ -3,6 +3,7 @@ import userImg from "../assets/user.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
 import useRole from "../hooks/useRole";
+import getErrorMessage from "../utils/errorMessage";
 
 const DropDown = () => {
   const { loading, user, logoutUser } = useAuth();
@@ -18,7 +19,8 @@ const DropDown = () => {
         toast.info("Logout Successful");
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.error("Logout failed", err);
+        toast.error(getErrorMessage(err));
       });
   };
   return (

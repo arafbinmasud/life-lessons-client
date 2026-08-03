@@ -7,6 +7,8 @@ import { Link } from "react-router";
 import { FaTrashAlt, FaEye } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import ErrorState from "../../../components/ErrorState";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const MyFavorites = () => {
   const axiosSecure = useAxiosSecure();
@@ -18,6 +20,8 @@ const MyFavorites = () => {
   const {
     data: favorites = [],
     isLoading,
+    isError,
+    error,
     refetch,
   } = useQuery({
     queryKey: ["my-favorites", user?.email, category, tone],
@@ -31,7 +35,6 @@ const MyFavorites = () => {
   });
 
   const handleRemove = (lessonId) => {
-    console.log(lessonId);
     Swal.fire({
       title: "Are you sure?",
       text: "Do you want to remove this lesson from favorites?",
@@ -48,19 +51,32 @@ const MyFavorites = () => {
             email: user?.email,
           })
           .then((res) => {
-            if (res.data.modifiedCount) {
-              refetch();
-              toast.success("Removed Successfully");
+            if (!res.data.modifiedCount) {
+              toast.warn("This lesson was not in your favorites.");
+              return;
             }
+            refetch();
+            toast.success("Removed Successfully");
           })
           .catch((err) => {
-            toast.error(err);
+            console.error("Failed to remove favorite", err);
+            toast.error(getErrorMessage(err));
           });
       }
     });
   };
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load your favorites"
+      />
+    );
+  }
 
   return (
     <div>

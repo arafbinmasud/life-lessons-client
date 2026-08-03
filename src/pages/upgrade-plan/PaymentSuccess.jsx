@@ -4,6 +4,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 import { FaCheckCircle } from "react-icons/fa";
+import getErrorMessage from "../../utils/errorMessage";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -24,7 +25,14 @@ const PaymentSuccess = () => {
             });
           }
         })
-        .catch((err) => console.log("Update Error:", err));
+        .catch((err) => {
+          console.error("Failed to activate premium membership", err);
+          Swal.fire({
+            title: "Activation Failed",
+            text: `Your payment succeeded but we could not activate premium access: ${getErrorMessage(err)}`,
+            icon: "error",
+          });
+        });
     }
   }, [user, sessionId, axiosSecure]);
 

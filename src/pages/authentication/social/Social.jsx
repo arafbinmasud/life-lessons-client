@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import useAxios from "../../../hooks/useAxios";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const Social = () => {
   const { googleSignIn } = useAuth();
@@ -9,39 +10,42 @@ const Social = () => {
   const navigate = useNavigate();
   const axios = useAxios();
 
-  const handleGoogleLogin = () => {
-    googleSignIn()
-      .then((res) => {
-        const token = res.user.accessToken;
-        const user = {
-          displayName: res.user.displayName,
-          email: res.user.email,
-          photoURL: res.user.photoURL,
-          role: "user",
-          isPremiumUser: false,
-        };
-        axios
-          .post("/users", user, {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((result) => {
-            if (
-              result.data.insertedId ||
-              result.data.message === "User Exists"
-            ) {
-              toast.success(
-                `Hi ${res.user.displayName} , Welcome to Digital Life Lessons`,
-              );
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        navigate(location.state || "/");
-      })
-      .catch((err) => {
-        toast.error(err.message);
+  const handleGoogleLogin = async () => {
+    let credential;
+    try {
+      credential = await googleSignIn();
+    } catch (err) {
+      console.error("Google sign in failed", err);
+      toast.error(getErrorMessage(err));
+      return;
+    }
+
+    const token = credential.user.accessToken;
+    const user = {
+      displayName: credential.user.displayName,
+      email: credential.user.email,
+      photoURL: credential.user.photoURL,
+      role: "user",
+      isPremiumUser: false,
+    };
+
+    try {
+      const result = await axios.post("/users", user, {
+        headers: { Authorization: `Bearer ${token}` },
       });
+      if (result.data.insertedId || result.data.message === "User Exists") {
+        toast.success(
+          `Hi ${credential.user.displayName} , Welcome to Digital Life Lessons`,
+        );
+      }
+    } catch (err) {
+      console.error("Failed to save user in database", err);
+      toast.error(
+        `Signed in, but saving your profile failed: ${getErrorMessage(err)}`,
+      );
+    }
+
+    navigate(location.state || "/");
   };
   return (
     <button

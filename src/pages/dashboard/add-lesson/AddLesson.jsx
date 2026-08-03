@@ -6,13 +6,14 @@ import { useState } from "react";
 import successAnimation from "../../../assets/Success.json";
 import Lottie from "lottie-react";
 import Loader from "../../../components/Loader";
+import Swal from "sweetalert2";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const AddLesson = () => {
   const { isPremiumUser, loading } = useRole();
   const [showSuccess, setShowSuccess] = useState(false);
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-console.log(user);
 
   const {
     register,
@@ -42,10 +43,17 @@ console.log(user);
           setTimeout(() => {
             setShowSuccess(false);
           }, 4000);
+          return;
         }
+        Swal.fire(
+          "Not Published",
+          "The lesson could not be published. Please try again.",
+          "warning",
+        );
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Failed to publish lesson", err);
+        Swal.fire("Publish Failed", getErrorMessage(err), "error");
       });
   };
 

@@ -6,7 +6,12 @@ const useRole = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading: authLoading } = useAuth();
 
-  const { data: userData, isLoading } = useQuery({
+  const {
+    data: userData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["userRole", user?.email],
     enabled: !authLoading && !!user?.email,
     staleTime: 0,
@@ -19,7 +24,7 @@ const useRole = () => {
   const role = userData?.role || "user";
   const isPremiumUser = userData?.isPremiumUser || false;
   const loading = isLoading || authLoading;
-  return { role, isPremiumUser, loading };
+  return { role, isPremiumUser, loading, isError, error };
 };
 
 export default useRole;

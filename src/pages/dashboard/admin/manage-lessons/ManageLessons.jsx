@@ -11,6 +11,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../../../components/Loader";
 import Swal from "sweetalert2";
+import ErrorState from "../../../../components/ErrorState";
+import getErrorMessage from "../../../../utils/errorMessage";
 
 const ManageLessons = () => {
   const axiosSecure = useAxiosSecure();
@@ -22,6 +24,8 @@ const ManageLessons = () => {
   const {
     data: managementData = {},
     isLoading,
+    isError,
+    error,
     refetch,
   } = useQuery({
     queryKey: ["manage-lessons", category, privacy, isReported],
@@ -36,13 +40,20 @@ const ManageLessons = () => {
   const { stats = {}, lessons = [] } = managementData;
 
   const handleUpdateStatus = async (id, updateBody, successMessage) => {
-    const res = await axiosSecure.patch(
-      `/admin/lessons/status/${id}`,
-      updateBody,
-    );
-    if (res.data.modifiedCount > 0) {
-      refetch();
-      Swal.fire("Updated!", successMessage, "success");
+    try {
+      const res = await axiosSecure.patch(
+        `/admin/lessons/status/${id}`,
+        updateBody,
+      );
+      if (res.data.modifiedCount > 0) {
+        refetch();
+        Swal.fire("Updated!", successMessage, "success");
+        return;
+      }
+      Swal.fire("No Changes", "The lesson was not updated.", "warning");
+    } catch (err) {
+      console.error("Failed to update lesson status", err);
+      Swal.fire("Update Failed", getErrorMessage(err), "error");
     }
   };
 
@@ -60,21 +71,40 @@ const ManageLessons = () => {
         axiosSecure
           .delete(`/admin/lessons/${id}`)
           .then((res) => {
-            if (res.data.deletedCount) {
-              refetch();
+            if (!res.data.deletedCount) {
               Swal.fire(
-                "Deleted!",
-                "The lesson has been permanently removed.",
-                "success",
+                "Not Deleted",
+                "The lesson could not be deleted. Please try again.",
+                "warning",
               );
+              return;
             }
+            refetch();
+            Swal.fire(
+              "Deleted!",
+              "The lesson has been permanently removed.",
+              "success",
+            );
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            console.error("Failed to delete lesson", err);
+            Swal.fire("Delete Failed", getErrorMessage(err), "error");
+          });
       }
     });
   };
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load lessons"
+      />
+    );
+  }
 
   return (
     <div className="space-y-8">

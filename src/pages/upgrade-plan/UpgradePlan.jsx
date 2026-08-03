@@ -3,6 +3,8 @@ import Loader from "../../components/Loader";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useRole from "../../hooks/useRole";
+import Swal from "sweetalert2";
+import getErrorMessage from "../../utils/errorMessage";
 
 const UpgradePlan = () => {
   const axiosSecure = useAxiosSecure();
@@ -18,9 +20,16 @@ const UpgradePlan = () => {
 
       if (res.data.url) {
         window.location.href = res.data.url;
+        return;
       }
+      Swal.fire(
+        "Checkout Unavailable",
+        "We could not start the checkout session. Please try again.",
+        "warning",
+      );
     } catch (err) {
-      console.error( err);
+      console.error("Failed to start checkout session", err);
+      Swal.fire("Upgrade Failed", getErrorMessage(err), "error");
     }
   };
 

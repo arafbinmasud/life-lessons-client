@@ -13,12 +13,19 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Link } from "react-router";
+import ErrorState from "../../../components/ErrorState";
 
 const DashboardOverview = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
-  const { data: stats = {}, isLoading } = useQuery({
+  const {
+    data: stats = {},
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["dashboard-stats", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
@@ -30,6 +37,16 @@ const DashboardOverview = () => {
   });
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load your dashboard"
+      />
+    );
+  }
 
   const {
     totalCreated = 0,

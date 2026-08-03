@@ -6,13 +6,12 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 import Loader from "../../../../components/Loader";
 import { FaEnvelope, FaUserEdit, FaUserShield } from "react-icons/fa";
+import getErrorMessage from "../../../../utils/errorMessage";
 
 const AdminProfile = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading, updateUser } = useAuth();
   const { role, loading: roleLoading } = useRole();
-
-  console.log(user);
 
   const { register, handleSubmit, reset } = useForm();
 
@@ -25,33 +24,38 @@ const AdminProfile = () => {
     }
   }, [user, reset]);
 
-  const handleUpdateProfile = (data) => {
+  const handleUpdateProfile = async (data) => {
     const updateInfo = {
       displayName: data.displayName,
       photoURL: data.photoURL,
     };
 
-    updateUser(updateInfo);
+    try {
+      await updateUser(updateInfo);
 
-    axiosSecure
-      .patch(`/users/update-profile?email=${user?.email}`, {
-        name: data.displayName,
-        photo: data.photoURL,
-      })
-      .then((res) => {
-        if (res.data.modifiedCount) {
-          Swal.fire(
-            "Success!",
-            "Profile updated successfully. Please Reload",
-            "success",
-          );
+      const res = await axiosSecure.patch(
+        `/users/update-profile?email=${user?.email}`,
+        {
+          name: data.displayName,
+          photo: data.photoURL,
+        },
+      );
 
-          document.getElementById("update_modal").close();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      if (!res.data.modifiedCount) {
+        Swal.fire("No Changes", "Your profile was already up to date.", "info");
+        return;
+      }
+
+      Swal.fire(
+        "Success!",
+        "Profile updated successfully. Please Reload",
+        "success",
+      );
+      document.getElementById("update_modal").close();
+    } catch (err) {
+      console.error("Failed to update admin profile", err);
+      Swal.fire("Update Failed", getErrorMessage(err), "error");
+    }
   };
 
   if (loading || roleLoading) return <Loader />;

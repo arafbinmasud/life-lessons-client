@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import Social from "../social/Social";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const Login = () => {
   const { loginUser } = useAuth();
@@ -19,14 +20,14 @@ const Login = () => {
 
 
   const handleLogin = (data) => {
-    console.log("clicked", data);
     loginUser(data.email, data.password)
       .then((res) => {
         toast.success(`Login Successful! Welcome Back ${res.user.displayName}`);
         navigate(location.state || "/");
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.error("Login failed", err);
+        toast.error(getErrorMessage(err));
       });
   };
 
