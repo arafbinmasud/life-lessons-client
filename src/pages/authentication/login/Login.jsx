@@ -19,7 +19,6 @@ const Login = () => {
 
 
   const handleLogin = (data) => {
-    console.log("clicked", data);
     loginUser(data.email, data.password)
       .then((res) => {
         toast.success(`Login Successful! Welcome Back ${res.user.displayName}`);
