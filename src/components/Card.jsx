@@ -2,6 +2,8 @@ import { FaArrowCircleRight, FaLock } from "react-icons/fa";
 import useRole from "../hooks/useRole";
 import Loader from "./Loader";
 import { Link } from "react-router";
+import { DEFAULT_AVATAR } from "../constants";
+import { formatDateTime } from "../utils/formatDate";
 
 const Card = ({ lesson }) => {
   const { isPremiumUser, loading } = useRole();
@@ -44,15 +46,7 @@ const Card = ({ lesson }) => {
           </span>
         </div>
         <p className="text-accent">
-          Posted At:{" "}
-          {new Date(lesson.createdAt).toLocaleString("en-Gb", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })}
+          Posted At: {formatDateTime(lesson.createdAt)}
         </p>
         <h3 className="card-title mt-2">{lesson.title}</h3>
         <p className="text-accent text-sm line-clamp-3">{lesson.description}</p>
@@ -60,10 +54,7 @@ const Card = ({ lesson }) => {
           <div className="avatar">
             <div className="w-10 h-10 rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
               <img
-                src={
-                  lesson.authorPhoto ||
-                  "https://plus.unsplash.com/premium_photo-1738590017220-5820f49608cc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRlbW8lMjB1c2VyfGVufDB8fDB8fHww"
-                }
+                src={lesson.authorPhoto || DEFAULT_AVATAR}
               />
             </div>
           </div>
