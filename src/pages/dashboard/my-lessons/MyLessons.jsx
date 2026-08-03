@@ -16,6 +16,8 @@ import {
 import Loader from "../../../components/Loader";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
+import ErrorState from "../../../components/ErrorState";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const MyLessons = () => {
   const axiosSecure = useAxiosSecure();
@@ -32,6 +34,8 @@ const MyLessons = () => {
   const {
     data: lessons = [],
     isLoading,
+    isError,
+    error,
     refetch,
   } = useQuery({
     queryKey: ["my-lessons", user?.email],
@@ -51,12 +55,22 @@ const MyLessons = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
-      if (result.isConfirmed) {
+      if (!result.isConfirmed) return;
+      try {
         const res = await axiosSecure.delete(`/lessons/${id}`);
-        if (res.data.deletedCount) {
-          refetch();
-          Swal.fire("Deleted!", "Your lesson has been deleted.", "success");
+        if (!res.data.deletedCount) {
+          Swal.fire(
+            "Not Deleted",
+            "The lesson could not be deleted. Please try again.",
+            "warning",
+          );
+          return;
         }
+        refetch();
+        Swal.fire("Deleted!", "Your lesson has been deleted.", "success");
+      } catch (err) {
+        console.error("Failed to delete lesson", err);
+        Swal.fire("Delete Failed", getErrorMessage(err), "error");
       }
     });
   };
@@ -74,24 +88,37 @@ const MyLessons = () => {
     axiosSecure
       .patch(`/lessons/${selectedLesson._id}`, data)
       .then((res) => {
-        if (res.data.modifiedCount) {
-          Swal.fire({
-            title: "Updated!",
-            text: "Your file has been updated.",
-            icon: "success",
-          });
-          reset();
-          refetch();
-          setSelectedLesson(null);
-          document.getElementById("update_modal").close();
+        if (!res.data.modifiedCount) {
+          Swal.fire("No Changes", "The lesson was not updated.", "warning");
+          return;
         }
+        Swal.fire({
+          title: "Updated!",
+          text: "Your file has been updated.",
+          icon: "success",
+        });
+        reset();
+        refetch();
+        setSelectedLesson(null);
+        document.getElementById("update_modal").close();
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Failed to update lesson", err);
+        Swal.fire("Update Failed", getErrorMessage(err), "error");
       });
   };
 
   if (isLoading || loading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load your lessons"
+      />
+    );
+  }
 
   return (
     <div>

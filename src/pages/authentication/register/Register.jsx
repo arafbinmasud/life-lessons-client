@@ -6,6 +6,7 @@ import Social from "../social/Social";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import useAxios from "../../../hooks/useAxios";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const Register = () => {
   const { registerUser, updateUser } = useAuth();
@@ -18,9 +19,7 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const handleRegister = (data) => {
-    console.log("clicked", data);
-
+  const handleRegister = async (data) => {
     // to save in db
     const user = {
       displayName: data.name,
@@ -34,28 +33,41 @@ const Register = () => {
       displayName: data.name,
       photoURL: data.photo,
     };
-    registerUser(data.email, data.password)
-      .then((res) => {
-        console.log(res.user);
-        const token = res.user.accessToken;
-        updateUser(updateInfo);
-        navigate("/");
-        axios
-          .post("/users", user, {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            if (res.data.insertedId || res.data.message === "User Exists") {
-              toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        toast.error(err.message);
+    let credential;
+    try {
+      credential = await registerUser(data.email, data.password);
+    } catch (err) {
+      console.error("Registration failed", err);
+      toast.error(getErrorMessage(err));
+      return;
+    }
+
+    const token = credential.user.accessToken;
+
+    try {
+      await updateUser(updateInfo);
+    } catch (err) {
+      console.error("Failed to update profile after registration", err);
+      toast.warn(
+        `Account created, but your profile details could not be saved: ${getErrorMessage(err)}`,
+      );
+    }
+
+    try {
+      const res = await axios.post("/users", user, {
+        headers: { Authorization: `Bearer ${token}` },
       });
+      if (res.data.insertedId || res.data.message === "User Exists") {
+        toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`);
+      }
+    } catch (err) {
+      console.error("Failed to save user in database", err);
+      toast.error(
+        `Account created, but saving your profile failed: ${getErrorMessage(err)}`,
+      );
+    }
+
+    navigate("/");
   };
 
   return (

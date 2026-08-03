@@ -13,6 +13,9 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import Swal from "sweetalert2";
 import Card from "../../components/Card";
+import ErrorState from "../../components/ErrorState";
+import getErrorMessage from "../../utils/errorMessage";
+import { toast } from "react-toastify";
 
 const LessonDetails = () => {
   const { id } = useParams();
@@ -25,6 +28,8 @@ const LessonDetails = () => {
   const {
     data: lesson,
     isLoading,
+    isError,
+    error,
     refetch,
   } = useQuery({
     queryKey: ["lesson", id],
@@ -36,7 +41,12 @@ const LessonDetails = () => {
   });
 
   // comments fetch
-  const { data: comments = [], refetch: refetchComments } = useQuery({
+  const {
+    data: comments = [],
+    isError: isCommentsError,
+    error: commentsError,
+    refetch: refetchComments,
+  } = useQuery({
     queryKey: ["comments", id],
     queryFn: async () => {
       const res = await axiosSecure.get(`/comments/${id}`);
@@ -45,7 +55,11 @@ const LessonDetails = () => {
   });
 
   // similar data fetch
-  const { data: similarLessons = [], isLoading: isSimilarLoading } = useQuery({
+  const {
+    data: similarLessons = [],
+    isLoading: isSimilarLoading,
+    isError: isSimilarError,
+  } = useQuery({
     queryKey: ["similar-lessons", lesson?.category, id, lesson?.tone],
     enabled: !!lesson?.category,
     queryFn: async () => {
@@ -58,18 +72,28 @@ const LessonDetails = () => {
 
   const handleLike = async () => {
     if (!user) return navigate("/authentication/login");
-    await axiosSecure.patch(`/lessons/like/${id}`, { email: user.email });
-    refetch();
+    try {
+      await axiosSecure.patch(`/lessons/like/${id}`, { email: user.email });
+      refetch();
+    } catch (err) {
+      console.error("Failed to like lesson", err);
+      toast.error(getErrorMessage(err));
+    }
   };
 
   const handleFavorites = async () => {
     if (!user) {
       return navigate("/authentication/login");
     }
-    await axiosSecure.patch(`lessons/favorites/${id}`, {
-      email: user.email,
-    });
-    refetch();
+    try {
+      await axiosSecure.patch(`lessons/favorites/${id}`, {
+        email: user.email,
+      });
+      refetch();
+    } catch (err) {
+      console.error("Failed to update favorites", err);
+      toast.error(getErrorMessage(err));
+    }
   };
 
   const handleReport = async () => {
@@ -102,21 +126,26 @@ const LessonDetails = () => {
         timestamp: new Date(),
       };
 
-      const res = await axiosSecure.post("/lesson-report", reportData);
+      try {
+        const res = await axiosSecure.post("/lesson-report", reportData);
 
-      if (res.data.insertedId) {
-        Swal.fire(
-          "Reported!",
-          "Thank you. This lesson has been reported to the admin.",
-          "success",
-        );
-      }
-      if (res.data.message) {
-        Swal.fire({
-          title: "Oops...",
-          text: res.data.message,
-          icon: "warning",
-        });
+        if (res.data.insertedId) {
+          Swal.fire(
+            "Reported!",
+            "Thank you. This lesson has been reported to the admin.",
+            "success",
+          );
+        }
+        if (res.data.message) {
+          Swal.fire({
+            title: "Oops...",
+            text: res.data.message,
+            icon: "warning",
+          });
+        }
+      } catch (err) {
+        console.error("Failed to report lesson", err);
+        Swal.fire("Report Failed", getErrorMessage(err), "error");
       }
     }
   };
@@ -136,14 +165,33 @@ const LessonDetails = () => {
       createdAt: new Date(),
     };
 
-    const res = await axiosSecure.post("/comments", newComment);
-    if (res.data.insertedId) {
-      e.target.reset();
+    const form = e.target;
+
+    try {
+      const res = await axiosSecure.post("/comments", newComment);
+      if (!res.data.insertedId) {
+        toast.warn("Your comment could not be posted. Please try again.");
+        return;
+      }
+      form.reset();
       refetchComments();
+    } catch (err) {
+      console.error("Failed to post comment", err);
+      toast.error(getErrorMessage(err));
     }
   };
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load this lesson"
+      />
+    );
+  }
 
   return (
     <div>
@@ -223,7 +271,13 @@ const LessonDetails = () => {
             </form>
 
             <div className="space-y-4">
-              {comments.length === 0 ? (
+              {isCommentsError ? (
+                <ErrorState
+                  error={commentsError}
+                  onRetry={refetchComments}
+                  title="Failed to load comments"
+                />
+              ) : comments.length === 0 ? (
                 <p className="text-gray-400 italic">
                   No comments yet. Be the first to comment!
                 </p>
@@ -331,11 +385,15 @@ const LessonDetails = () => {
         <h3 className="text-4xl font-semibold mb-8">
           Similar lessons that you might like
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-          {similarLessons.map((lesson) => (
-            <Card key={lesson._id} lesson={lesson} />
-          ))}
-        </div>
+        {isSimilarError ? (
+          <p className="text-accent">Could not load similar lessons.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+            {similarLessons.map((lesson) => (
+              <Card key={lesson._id} lesson={lesson} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

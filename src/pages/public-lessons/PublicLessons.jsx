@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import Card from "../../components/Card";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import ErrorState from "../../components/ErrorState";
 
 const PublicLessons = () => {
   const axios = useAxios();
@@ -14,7 +15,13 @@ const PublicLessons = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  const { data: { lessons = [], total = 0 } = {}, isLoading } = useQuery({
+  const {
+    data: { lessons = [], total = 0 } = {},
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["public-lessons", search, category, tone, sort, currentPage],
     queryFn: async () => {
       const res = await axios.get(
@@ -28,6 +35,16 @@ const PublicLessons = () => {
   const totalPages = Math.ceil(total / itemsPerPage);
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load lessons"
+      />
+    );
+  }
 
   return (
     <div>

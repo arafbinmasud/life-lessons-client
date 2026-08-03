@@ -3,11 +3,19 @@ import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../../components/Loader";
 import { FaUserAlt, FaUserShield } from "react-icons/fa";
 import Swal from "sweetalert2";
+import ErrorState from "../../../../components/ErrorState";
+import getErrorMessage from "../../../../utils/errorMessage";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: users = [], isLoading , refetch} = useQuery({
+  const {
+    data: users = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["manage-users"],
     queryFn: async () => {
       const res = await axiosSecure.get("/admin/users");
@@ -16,7 +24,6 @@ const ManageUsers = () => {
   });
 
   const handlePromoteAdmin = (user) => {
-    console.log(user);
     Swal.fire({
       title: `Are you sure?`,
       text: `Do you want to promote "${user.displayName}" to Admin?`,
@@ -30,21 +37,40 @@ const ManageUsers = () => {
         axiosSecure
           .patch(`/admin/users/role/${user._id}`, { role: "admin" , isPremiumUser: true})
           .then((res) => {
-            if (res.data.modifiedCount) {
-              refetch();
+            if (!res.data.modifiedCount) {
               Swal.fire(
-                "Promoted!",
-                `${user.displayName} is now an Admin.`,
-                "success",
+                "No Changes",
+                `${user.displayName} was not promoted. Please try again.`,
+                "warning",
               );
+              return;
             }
+            refetch();
+            Swal.fire(
+              "Promoted!",
+              `${user.displayName} is now an Admin.`,
+              "success",
+            );
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            console.error("Failed to promote user", err);
+            Swal.fire("Promotion Failed", getErrorMessage(err), "error");
+          });
       }
     });
   };
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load users"
+      />
+    );
+  }
 
   return (
     <div className="space-y-6 p-2 md:p-6 bg-base-100 rounded-3xl border border-base-300 shadow-xs">

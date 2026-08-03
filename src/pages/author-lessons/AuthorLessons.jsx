@@ -3,12 +3,19 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import Card from "../../components/Card";
+import ErrorState from "../../components/ErrorState";
 
 const AuthorLessons = () => {
   const { authorId } = useParams();
   const axiosSecure = useAxiosSecure();
 
-  const { data: authorLessons = [], isLoading } = useQuery({
+  const {
+    data: authorLessons = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["author-lessons", authorId],
     queryFn: async () => {
       const res = await axiosSecure.get(`/lessons/author/${authorId}`);
@@ -17,6 +24,24 @@ const AuthorLessons = () => {
   });
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load author lessons"
+      />
+    );
+  }
+
+  if (authorLessons.length === 0) {
+    return (
+      <div className="text-center py-12 text-accent">
+        This author has not shared any lessons yet.
+      </div>
+    );
+  }
 
   return (
     <div>

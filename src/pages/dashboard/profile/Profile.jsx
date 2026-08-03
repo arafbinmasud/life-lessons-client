@@ -8,6 +8,8 @@ import Card from "../../../components/Card";
 import useRole from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import ErrorState from "../../../components/ErrorState";
+import getErrorMessage from "../../../utils/errorMessage";
 
 const Profile = () => {
   const axiosSecure = useAxiosSecure();
@@ -17,6 +19,8 @@ const Profile = () => {
   const {
     data: profileData = {},
     isLoading,
+    isError,
+    error,
     refetch,
   } = useQuery({
     queryKey: ["user-profile-info", user?.email],
@@ -40,34 +44,50 @@ const Profile = () => {
     }
   }, [user, reset]);
 
-  const handleUpdateProfile = (data) => {
-    updateUser({
-      displayName: data.displayName,
-      photoURL: data.photoURL,
-    });
-
-    axiosSecure
-      .patch(`/users/update-profile?email=${user?.email}`, {
-        name: data.displayName,
-        photo: data.photoURL,
-      })
-      .then((res) => {
-        if (res.data.modifiedCount) {
-          Swal.fire(
-            "Success!",
-            "Profile updated successfully. Please Reload",
-            "success",
-          );
-          refetch();
-          document.getElementById("update_modal").close();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+  const handleUpdateProfile = async (data) => {
+    try {
+      await updateUser({
+        displayName: data.displayName,
+        photoURL: data.photoURL,
       });
+
+      const res = await axiosSecure.patch(
+        `/users/update-profile?email=${user?.email}`,
+        {
+          name: data.displayName,
+          photo: data.photoURL,
+        },
+      );
+
+      if (!res.data.modifiedCount) {
+        Swal.fire("No Changes", "Your profile was already up to date.", "info");
+        return;
+      }
+
+      Swal.fire(
+        "Success!",
+        "Profile updated successfully. Please Reload",
+        "success",
+      );
+      refetch();
+      document.getElementById("update_modal").close();
+    } catch (err) {
+      console.error("Failed to update profile", err);
+      Swal.fire("Update Failed", getErrorMessage(err), "error");
+    }
   };
 
   if (isLoading || loading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load your profile"
+      />
+    );
+  }
 
   const {
     totalCreated = 0,

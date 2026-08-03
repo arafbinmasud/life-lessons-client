@@ -10,11 +10,18 @@ import {
 } from "react-icons/fa";
 
 import { Link } from "react-router";
+import ErrorState from "../../../../components/ErrorState";
 
 const AdminOverview = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: overview = {}, isLoading } = useQuery({
+  const {
+    data: overview = {},
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["admin-overview"],
     queryFn: async () => {
       const res = await axiosSecure.get("/admin-overview");
@@ -23,6 +30,16 @@ const AdminOverview = () => {
   });
 
   if (isLoading) return <Loader />;
+
+  if (isError) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={refetch}
+        title="Failed to load the admin overview"
+      />
+    );
+  }
 
   const {
     totalUsers = 0,
