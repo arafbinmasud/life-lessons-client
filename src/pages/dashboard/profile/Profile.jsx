@@ -8,6 +8,7 @@ import Card from "../../../components/Card";
 import useRole from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { DEFAULT_AVATAR } from "../../../constants";
 
 const Profile = () => {
   const axiosSecure = useAxiosSecure();
@@ -83,10 +84,7 @@ const Profile = () => {
           <div className="avatar relative">
             <div className="w-28 h-28 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
               <img
-                src={
-                  user?.photoURL ||
-                  "https://plus.unsplash.com/premium_photo-1738590017220-5820f49608cc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRlbW8lMjB1c2VyfGVufDB8fDB8fHww"
-                }
+                src={user?.photoURL || DEFAULT_AVATAR}
                 alt="Profile"
               />
             </div>

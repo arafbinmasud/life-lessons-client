@@ -11,6 +11,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../../../components/Loader";
 import Swal from "sweetalert2";
+import { confirmAction } from "../../../../utils/confirmAction";
+import { CATEGORY_OPTIONS } from "../../../../constants";
 
 const ManageLessons = () => {
   const axiosSecure = useAxiosSecure();
@@ -47,11 +49,9 @@ const ManageLessons = () => {
   };
 
   const handleDeleteLesson = (id, title) => {
-    Swal.fire({
+    confirmAction({
       title: "Are you absolutely sure?",
       text: `"${title}" will be permanently removed from the platform.`,
-      icon: "warning",
-      showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete permanently!",
@@ -138,11 +138,11 @@ const ManageLessons = () => {
           }}
         >
           <option value="">All Categories</option>
-          <option value="Personal Growth">Personal Growth</option>
-          <option value="Career">Career</option>
-          <option value="Relationships">Relationships</option>
-          <option value="Mindset">Mindset</option>
-          <option value="Mistakes Learned">Mistakes Learned</option>
+          {CATEGORY_OPTIONS.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
 
         {/* privacy */}

@@ -2,9 +2,10 @@ import axios from "axios";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import { API_BASE_URL } from "../constants";
 
 const axiosInstance = axios.create({
-  baseURL: "https://life-lesson-server-kohl.vercel.app",
+  baseURL: API_BASE_URL,
 });
 
 const useAxiosSecure = () => {

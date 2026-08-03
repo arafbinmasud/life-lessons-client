@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import useAxios from "../../../hooks/useAxios";
+import { buildNewUser, saveUser } from "../../../utils/saveUser";
 
 const Social = () => {
   const { googleSignIn } = useAuth();
@@ -13,17 +14,12 @@ const Social = () => {
     googleSignIn()
       .then((res) => {
         const token = res.user.accessToken;
-        const user = {
+        const user = buildNewUser({
           displayName: res.user.displayName,
           email: res.user.email,
           photoURL: res.user.photoURL,
-          role: "user",
-          isPremiumUser: false,
-        };
-        axios
-          .post("/users", user, {
-            headers: { Authorization: `Bearer ${token}` },
-          })
+        });
+        saveUser(axios, user, token)
           .then((result) => {
             if (
               result.data.insertedId ||

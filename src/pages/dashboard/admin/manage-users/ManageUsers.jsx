@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../../components/Loader";
 import { FaUserAlt, FaUserShield } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { confirmAction } from "../../../../utils/confirmAction";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -17,13 +18,8 @@ const ManageUsers = () => {
 
   const handlePromoteAdmin = (user) => {
     console.log(user);
-    Swal.fire({
-      title: `Are you sure?`,
+    confirmAction({
       text: `Do you want to promote "${user.displayName}" to Admin?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Make Admin!",
     }).then((result) => {
       if (result.isConfirmed) {

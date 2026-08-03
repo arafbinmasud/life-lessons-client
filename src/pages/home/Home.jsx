@@ -3,6 +3,7 @@ import useAxios from "../../hooks/useAxios";
 import Loader from "../../components/Loader";
 import Card from "../../components/Card";
 import { Link } from "react-router";
+import { DEFAULT_AVATAR } from "../../constants";
 import {
   FaGraduationCap,
   FaHeart,
@@ -243,10 +244,7 @@ const Home = () => {
                   </div>
                   <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                     <img
-                      src={
-                        author.authorPhoto ||
-                        "https://plus.unsplash.com/premium_photo-1738590017220-5820f49608cc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRlbW8lMjB1c2VyfGVufDB8fDB8fHww"
-                      }
+                      src={author.authorPhoto || DEFAULT_AVATAR}
                       alt={author.authorName}
                     />
                   </div>

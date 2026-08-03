@@ -13,6 +13,8 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import Swal from "sweetalert2";
 import Card from "../../components/Card";
+import { DEFAULT_AVATAR } from "../../constants";
+import { formatDateTime } from "../../utils/formatDate";
 
 const LessonDetails = () => {
   const { id } = useParams();
@@ -129,9 +131,7 @@ const LessonDetails = () => {
     const newComment = {
       lessonId: id,
       userName: user?.displayName,
-      userImage:
-        user?.photoURL ||
-        "https://plus.unsplash.com/premium_photo-1738590017220-5820f49608cc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRlbW8lMjB1c2VyfGVufDB8fDB8fHww",
+      userImage: user?.photoURL || DEFAULT_AVATAR,
       text: commentText,
       createdAt: new Date(),
     };
@@ -245,14 +245,7 @@ const LessonDetails = () => {
                           {comment.userName}
                         </h4>
                         <span className="text-xs text-gray-400">
-                          {new Date(comment.createdAt).toLocaleString("en-GB", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                          })}
+                          {formatDateTime(comment.createdAt)}
                         </span>
                       </div>
                       <p className="text-gray-700 mt-1 text-sm p-2 rounded-lg wrap-break-word">
@@ -272,27 +265,11 @@ const LessonDetails = () => {
           <div className="bg-base-200 p-6 rounded-2xl">
             <h3 className="font-bold mb-2">Lesson Info</h3>
             <p className="text-sm">
-              Created At:{" "}
-              {new Date(lesson?.createdAt).toLocaleDateString("en-Gb", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              })}
+              Created At: {formatDateTime(lesson?.createdAt)}
             </p>
             {lesson?.updatedAt && (
               <p className="text-sm">
-                Last Update:{" "}
-                {new Date(lesson?.updatedAt).toLocaleDateString("en-Gb", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
+                Last Update: {formatDateTime(lesson?.updatedAt)}
               </p>
             )}
             <p className="text-sm">Visibility: {lesson?.privacy}</p>
@@ -302,13 +279,7 @@ const LessonDetails = () => {
             <div className="card-body items-center text-center">
               <div className="avatar">
                 <div className="w-20 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
-                  <img
-                    src={
-                      lesson?.authorPhoto ||
-                      "https://plus.unsplash.com/premium_photo-1738590017220-5820f49608cc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRlbW8lMjB1c2VyfGVufDB8fDB8fHww"
-                    }
-                    alt=""
-                  />
+                  <img src={lesson?.authorPhoto || DEFAULT_AVATAR} alt="" />
                 </div>
               </div>
               <h2 className="card-title mt-2">{lesson?.authorName}</h2>

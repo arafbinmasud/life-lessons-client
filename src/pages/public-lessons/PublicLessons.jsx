@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import Card from "../../components/Card";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { CATEGORY_OPTIONS, TONE_OPTIONS } from "../../constants";
 
 const PublicLessons = () => {
   const axios = useAxios();
@@ -56,11 +57,11 @@ const PublicLessons = () => {
           }}
         >
           <option value="">All Categories</option>
-          <option value="Personal Growth">Personal Growth</option>
-          <option value="Career">Career</option>
-          <option value="Relationships">Relationships</option>
-          <option value="Mindset">Mindset</option>
-          <option value="Mistakes Learned">Mistakes Learned</option>
+          {CATEGORY_OPTIONS.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
         
         <select
@@ -72,10 +73,11 @@ const PublicLessons = () => {
           }}
         >
           <option value="">All Tones</option>
-          <option value="Motivational">Motivational</option>
-          <option value="Sad">Sad</option>
-          <option value="Realization">Realization</option>
-          <option value="Gratitude">Gratitude</option>
+          {TONE_OPTIONS.map((tone) => (
+            <option key={tone} value={tone}>
+              {tone}
+            </option>
+          ))}
         </select>
         <select
           value={sort}

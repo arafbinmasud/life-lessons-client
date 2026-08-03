@@ -13,6 +13,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Link } from "react-router";
+import { formatDate } from "../../../utils/formatDate";
 
 const DashboardOverview = () => {
   const axiosSecure = useAxiosSecure();
@@ -165,8 +166,7 @@ const DashboardOverview = () => {
                       {lesson.title}
                     </h4>
                     <p className="text-xs text-gray-400">
-                      {lesson.category} •{" "}
-                      {new Date(lesson.createdAt).toLocaleDateString("en-gb")}
+                      {lesson.category} • {formatDate(lesson.createdAt)}
                     </p>
                   </div>
                   <Link

@@ -6,6 +6,7 @@ import Social from "../social/Social";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import useAxios from "../../../hooks/useAxios";
+import { buildNewUser, saveUser } from "../../../utils/saveUser";
 
 const Register = () => {
   const { registerUser, updateUser } = useAuth();
@@ -22,13 +23,11 @@ const Register = () => {
     console.log("clicked", data);
 
     // to save in db
-    const user = {
+    const user = buildNewUser({
       displayName: data.name,
       email: data.email,
       photoURL: data.photo,
-      role: "user",
-      isPremiumUser: false,
-    };
+    });
 
     const updateInfo = {
       displayName: data.name,
@@ -40,10 +39,7 @@ const Register = () => {
         const token = res.user.accessToken;
         updateUser(updateInfo);
         navigate("/");
-        axios
-          .post("/users", user, {
-            headers: { Authorization: `Bearer ${token}` },
-          })
+        saveUser(axios, user, token)
           .then((res) => {
             if (res.data.insertedId || res.data.message === "User Exists") {
               toast.success(`Hi ${data.name}, Welcome to Digital Life Lessons`);

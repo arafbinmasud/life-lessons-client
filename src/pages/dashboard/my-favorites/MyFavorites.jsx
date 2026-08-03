@@ -5,8 +5,9 @@ import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
 import { Link } from "react-router";
 import { FaTrashAlt, FaEye } from "react-icons/fa";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { confirmAction } from "../../../utils/confirmAction";
+import { CATEGORY_OPTIONS, TONE_OPTIONS } from "../../../constants";
 
 const MyFavorites = () => {
   const axiosSecure = useAxiosSecure();
@@ -32,11 +33,8 @@ const MyFavorites = () => {
 
   const handleRemove = (lessonId) => {
     console.log(lessonId);
-    Swal.fire({
-      title: "Are you sure?",
+    confirmAction({
       text: "Do you want to remove this lesson from favorites?",
-      icon: "warning",
-      showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, remove!",
@@ -79,11 +77,11 @@ const MyFavorites = () => {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">All Categories</option>
-            <option value="Personal Growth">Personal Growth</option>
-            <option value="Career">Career</option>
-            <option value="Relationships">Relationships</option>
-            <option value="Mindset">Mindset</option>
-            <option value="Mistakes Learned">Mistakes Learned</option>
+            {CATEGORY_OPTIONS.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -96,10 +94,11 @@ const MyFavorites = () => {
             }}
           >
             <option value="">All Tones</option>
-            <option value="Motivational">Motivational</option>
-            <option value="Sad">Sad</option>
-            <option value="Realization">Realization</option>
-            <option value="Gratitude">Gratitude</option>
+            {TONE_OPTIONS.map((tone) => (
+              <option key={tone} value={tone}>
+                {tone}
+              </option>
+            ))}
           </select>
         </div>
       </div>
